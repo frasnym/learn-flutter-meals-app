@@ -1,6 +1,6 @@
 # Meals App
 
-Learning Flutter by Building 
+Learning Flutter by Building Meals App
 
 ## Tools Used
 
