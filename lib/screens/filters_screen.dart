@@ -5,15 +5,30 @@ import '../widgets/main_drawer.dart';
 class FiltersScreen extends StatefulWidget {
   static const routeName = '/filters';
 
+  final Map<String, bool> currentFilters;
+  final Function saveFilters;
+
+  FiltersScreen(this.currentFilters, this.saveFilters);
+
   @override
   _FiltersScreenState createState() => _FiltersScreenState();
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
   bool _glutenFree = false;
+  bool _lactoseFree = false;
   bool _vegetarian = false;
   bool _vegan = false;
-  bool _lactoseFree = false;
+
+  @override
+  initState() {
+    _glutenFree = widget.currentFilters['gluten'];
+    _lactoseFree = widget.currentFilters['lactose'];
+    _vegetarian = widget.currentFilters['vegetarian'];
+    _vegan = widget.currentFilters['vegan'];
+    // print('init $_glutenFree, $_lactoseFree, $_vegetarian, $_vegan');
+    super.initState();
+  }
 
   Widget _buildSwitchListTile(
     String title,
@@ -21,6 +36,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
     bool currentValue,
     Function updateValue,
   ) {
+    // print('builder $title, $description, $currentValue');
     return SwitchListTile(
       title: Text(title),
       subtitle: Text(description),
@@ -34,6 +50,20 @@ class _FiltersScreenState extends State<FiltersScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Filters Page!'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              final selectedFilters = {
+                'gluten': _glutenFree,
+                'lactose': _lactoseFree,
+                'vegetarian': _vegetarian,
+                'vegan': _vegan,
+              };
+              widget.saveFilters(selectedFilters);
+            },
+          ),
+        ],
       ),
       drawer: MainDrawer(),
       body: Center(
@@ -50,8 +80,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
               child: ListView(
                 children: <Widget>[
                   _buildSwitchListTile(
-                    'Glutten-free',
-                    'Only include glutten-free meals.',
+                    'Gluten-free',
+                    'Only include gluten-free meals.',
                     _glutenFree,
                     (newValue) {
                       setState(() {
